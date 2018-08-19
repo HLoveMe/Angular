@@ -277,7 +277,10 @@
 		  		 声明。    Angular：组件、指令和管道 所有的必须导入
 		  entryComponents:
 		  				动态插入的组件
-		  exports:      [ AppComponent ],
+		  exports:      [
+		  		作为特性模块 必须将这个模块的东西导出 给root模块使用
+		   		AppComponent 指令....
+		   ],
 		  
 		  bootstrap:    [ AppComponent ]
 		  		指定应用的主视图（称为根组件）
@@ -1671,7 +1674,15 @@ import 'rxjs/add/operator/toPromise';
 		> 组件自己的服务是独立的
 	3: exports:[] 提供其他模块使用   否则不能使用
 ```
+* 特性模块
 
+	```
+	一个app 只能有一个rootModule 当时可以有很多特性模块
+	ionic 就是一个特性模块
+	
+	你可以把一个单独的模块 比如说某一功能设置为特性模块 然后在root中包含它
+	
+	```
 * 动画
 
 		导入包   4.0后被独立出来
