@@ -358,10 +358,10 @@ export class AppModule { }
 	 	在使用该组件时需要指定的值<tag-name address="">	
 		@Input( 'telephone-number' ) tel:string
 		指定别名 <ta-name telephone-number="" >
-		@Input() set name(name:string){
-			....
-		} 
-		@Output() sureEv = new EventEmitter<class>();
+		@Input() set name(name:string){this._name = xxx}
+					get name(){return this._name} 
+					
+		@Output() sureEv = new EventEmitter<class>(); 事件导出
 		@Input 在使用该组件需要的初始值
 		@Output  该组件往父组件传递消息媒介
 		
@@ -372,7 +372,9 @@ export class AppModule { }
 		
 		@ ContentChild(class/"con") child
 		// 得到占位符 <ng-content>内部子组件
-			
+		@ HostListener  监听宿主事件
+		@ HostBinding 改变宿主样式
+		
 		constructor(
 			private dataServe:CustomServe,
 			private ele:ElemnetRef得到组件Document
@@ -444,6 +446,13 @@ export class AppModule { }
 					window document事件监听
 					 @HostListener('document:click', ['$event'])
 				     onClick(btn: Event) {}
+				     
+	组件样式
+		styles 元数据 仅仅对组件使用 不会影响宿主 也不行影响子组件 
+		
+		.host 伪类选择器 （组件内部样式规则中选择宿主元素的唯一方式）
+			.host(.active){
+			}
 				
 	```
 	
