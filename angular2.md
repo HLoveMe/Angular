@@ -1,4 +1,9 @@
 #<p style="text-align:center">angularJS2</p>
+* 项目配置
+	
+	```
+	angular.json
+	```
 
 * 数据绑定
 
