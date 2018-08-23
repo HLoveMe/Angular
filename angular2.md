@@ -1181,56 +1181,12 @@ _
 	
 ```
 
-```
-	css 样式导入
-		1:分为单独文件 同一目录下
-			component
-				ts
-				html
-				scss
-			@Component({
-				templateUrl:"xx.html" 即可
-			}）
-		2：内联
-			A.html 文件中  <style>...</style>//<link></link>
-			B.ts中 styles=[``,``]
-			C.ts中  styleUrls=[....]是相对app下的路径
-			
-			
-```
 
 ```
 Angular 数据更新策略
 		https://segmentfault.com/a/1190000008754052
 ```
 
-```
-关联的值不时时更新   没有触发检查事件
- 
- 输入框输入：
-	<input #box >
-	{{ box.value }}
-	当输入后 并不会更新值 这是因为angular并不得到响应 不会更新
-	
-	<input #box (keyup)="0">
-	{{ box.value }}
-	(keyup)="0"  angular 不知道他在干嘛  但是触发更新流程
-	
- 强制检查更新
- 	import {ChangeDetectorRef} from '@angular/core';  
- 	private changeDetectorRef:ChangeDetectorRef 
- 		markForCheck() - 在组件的 metadata 中如果设置了 		changeDetection: ChangeDetectionStrategy.OnPush 条件，
- 						那么变化检测不会再次执行，调用强制更新数据
-		detach() - 从变化检测树中分离变化检测器，该组件的变化检测器将不再执行变化检测，除非手动调用 reattach() 方法。
-		reattach() - 重新添加已分离的变化检测器，使得该组件及其子组件都能执行变化检测
-		detectChanges() - 从该组件到各个子组件执行一次变化检测 
-```
-
-```
-组件的动态创建：
-	移除之前的组件代码 ， 创建新的
-	上面有实例
-```
 ```
 双向数据绑定
 		1:一般仅仅表单控件才能使用双向数据绑定 这是因为angularjs为表单控件实现了ControlValueAccessor协议
