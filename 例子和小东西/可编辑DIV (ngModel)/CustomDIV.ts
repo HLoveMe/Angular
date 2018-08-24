@@ -51,7 +51,6 @@ export  class CustomDIV implements ControlValueAccessor{
 
   }
   setDisabledState?(isDisabled: boolean){
-    debugger
     if(isDisabled){
       this.render.removeAttribute(this.container.nativeElement,"contenteditable");
     }else{
