@@ -1174,9 +1174,16 @@ _
 导入第三方库 （js)
 
 	* typing库
-		* npm install -D @types/jquery
+		* 安装库 npm install jquery
+		* angular-cli.json | scripts | ["../node_modules/jquery/dist/jquery.min.js"]
 		* import * as $ from 'jquery';
 		* $('body').addClass('');
+		或者 推荐
+		* 安装库 npm install jquery
+		* 安装定义文件 npm install @types/jquery --save
+		* import * as $ from 'jquery';
+		* $('body').addClass('');
+		
 	* 自己的库js A
 		* 导入文件在assets下
 		* index.html 下导入<script src="/assets/jquery.min.js"></script> 
