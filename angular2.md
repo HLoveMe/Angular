@@ -1171,14 +1171,21 @@ _
 ```
 
 ```
-导入第三方库 （js + css）  这里指的是不能typing导入的库
+导入第三方库 （js)
 
-	1:在index.html 导入第三库js
-	2:如果同时要导入 css 要根据情况是导入模板css文件中  还是通过link 导入模板中
-		>由于模板css编译会自动增加  css[_ngcontent-c0]条件
-		>如果库 使用js 创建class 
-		就会有冲突 （这里可以通过直接链接 模板 html 中 link 导入 css）
-	
+	* typing库
+		* npm install -D @types/jquery
+		* import * as $ from 'jquery';
+		* $('body').addClass('');
+	* 自己的库js A
+		* 导入文件在assets下
+		* index.html 下导入<script src="/assets/jquery.min.js"></script> 
+		* ts declare var $: any; || xxx.d.ts中申明
+	* 自己的库js B
+		* 导入文件在assets下
+		* .angular-cli.json
+			*   "scripts": ["assets/jquery-3.2.1.js"],
+		* declare var $:any;
 ```
 
 
@@ -1451,29 +1458,4 @@ providers: [
     
     
 https://segmentfault.com/a/1190000009156250
-```
-
-```
- 解决ion-content可以上下拉动一点距离问题  滚动
- 	在ion-content 标签下有 <div class="scroll-content"></>
- 	存在css  overflow-y: scroll; 导致可以上下拉动
- 		
- @Directive({
-  selector:"[base-content-no-scroll]"
-})
-export class BaseContentNoScroll{
-  constructor(
-    private ele:ElementRef,
-  ){}
-  ngOnInit(){
-    let scroll_ele = this.ele.nativeElement.querySelector(".scroll-content");
-    scroll_ele.style.overflowY = "hidden";
-  }
-}
-注册：
-	declarations:[] 数组中
-使用:
-	<ion-content base-content-no-scroll>
-	</ion-content>
- 
 ```
