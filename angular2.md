@@ -264,31 +264,33 @@
 			
 	
 	```
-* 根模块app/app.module.ts
+* NgModule
 	
 	```
 		import { NgModule }      from '@angular/core';
 		import { BrowserModule } from '@angular/platform-browser';
 		@NgModule({
-		  imports:      [ BrowserModule ],
-				当应用需要模块的特性时，将其添加到imports数组中。
-				"只要" 在根模块AppModule中导入BrowserModule。除非是惰性的
-				* 只能导入NgModule类 不能为其他
+		  imports:[ BrowserModule ],
+				导入该模块依赖的其他模块
 				
 		  providers:    [ Logger ,自定义服务],
-		  		声明全局服务  (优先吧服务注册在module 而不是组件中)
-		  		只要是在@NgModule申明的服务 都是全局的
+		  		只要是在@NgModule申明的服务 是该模块下公用的
+		  		如果是根模块 则是全局的
+		  		
 		  declarations: [ AppComponent ],
-		  		 声明。    Angular：组件、指令和管道 所有的必须导入
+		  		 声明该模块使用的 Angular：组件、指令和管道 所有的必须导入
 		  entryComponents:
-		  				动态插入的组件
+		  		需要编译的组件		才能动态插入
 		  exports:      [
-		  		作为特性模块 必须将这个模块的东西导出 给root模块使用
-		   		AppComponent 指令....
+				把该模块的某些服务 提供给其他模块
 		   ],
 		  
 		  bootstrap:    [ AppComponent ]
-		  		指定应用的主视图（称为根组件）
+		  		指定应用的主视图（称为根组件）根模块才需要
+		  		
+		  	jit
+		  	id
+		  	
 		})
 		export class AppModule { }
 	```
@@ -315,18 +317,24 @@
 		2：为注入器 指定提供商
 			简写:
 					[LoginServe]
-			ClassProvider:
-						{provide: useClass: multi:true 扩展已有}
-			ExistingProvider:   
+			替代类提供商
+						{provide:AServer useClass:BServer}
+						表示当请求AServer时 给他BServer对象
+			别名供应商:   
 						[
-							BB,
-							{provide:AA useExisting:BB}
-							AA 为BB的 别名
+							//NewServer不注册,
+							{provide:OldServer useExisting:NewServer}
+							OldServer 是 NewServer的一个别名 
+							那么依赖OldServer的会被注入NewServer
 						]
 			FactoryProvider:   
 						{provide: useFactory:工厂 deps: multi:}
 			ValueProvider:    
-						{provide:OpaqueToken  useValue: multi:}			
+						{provide:OpaqueToken  useValue: }
+							见下面的非类依赖
+						{provide:XXServer userValue:new XXServer()}
+							使用已经创建的值 作为依赖
+									
 			
 		
 			@ngModel({providers:[...]})  为应用级别注入器  指定可以注入的服务
@@ -369,9 +377,9 @@
 				@Optional()    在宿主组件没有该服务  只是设置为null 不报错
 				private serve: MYServer) { }
 _
-@Self() - 表示只在本级注入器查找依赖对象
-@SkipSelf() - 表示不从本级注入器获取依赖对象
-@Optional - 表示该依赖对象是可选的，如果找不到返回 null
+				@Self() - 表示只在本级注入器查找依赖对象
+				@SkipSelf() - 跳过本级注入器 向上获取依赖对象
+				@Optional - 表示该依赖对象是可选的，如果找不到返回 null
 	```
 * 路由
 
