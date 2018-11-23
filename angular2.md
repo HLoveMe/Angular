@@ -115,25 +115,28 @@
 			test-com 组件内部调用onSave() 函数 -->执行emit(target)--->调用关联事件AA	
 				
 		```
-	* 数据双向绑定
+	* 数据双向绑定 
 	
 		import { FormsModule}   from '@angular/forms';
-		需要导入导入ngModel命令
+	
+		1：表单数据
+		2：双向绑定
 		
 		```
-		(表单)语法糖:
+		(表单)语法糖: ngModel语法
 			<input [(ngModel)]="writer.name">
 			展开样式 适合做更多的事情
-			<inpu  [ngModel]="currentHero.firstName"  (ngModelChange)="setUpperCaseFirstName($event)">
+			<input  [ngModel]="currentHero.firstName"  (ngModelChange)="setUpperCaseFirstName($event)">
 			
 		* ngModel 不能运用在其他控件上 除非 你实现了 interface ControlValueAccessor	
 			
+		* 非表单控件
 			class MYComponent{
 				@input()  size:number | string;
 				@output() sizeChange:new EventEmitter<number>();
 			}
 		ex:	
-			<mycom [(size)]>
+			<mycom [(size)] = "rang">
 		```
 		
 	
@@ -1309,10 +1312,7 @@ ng-template 和 ng-container
 ```
 组件相关类
 
-	ElementRef
-	TemplateRef
-	组件类
-	ViewContainerRef
+	ElementRef < TemplateRef <ViewContainerRef
 	
 TemplateRef & ViewContainerRef   Renderer
 
@@ -1333,12 +1333,14 @@ TemplateRef & ViewContainerRef   Renderer
 		){}
 	
 	TemplateRef模板引用(注入)
+		代表当前模板(视图)
 		ElementRef 元素 封装 HTML
 			nativeElement   HTML节点
 		createEmbeddedView() 创建内部视图  ViewRef_
 		
 	ViewContainerRef 组件容器（注入）
 		封装TemplateRef 提供便利方式进行组件操作
+		表示包含当前模板的容器锕
 		1:视图个数
 		2:模板
 		3:createEmbeddedView（结构指令）
