@@ -740,7 +740,7 @@ _
 			</form>
 			
 			css class
-				.ng-untouched{为点击}
+				.ng-untouched{未点击}
 				.ng-touched{点击}
 				.ng-dirty{值改变}
 				.ng-invalid{无效}
