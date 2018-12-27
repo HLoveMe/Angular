@@ -708,148 +708,6 @@ _
 	![](路由.png)
 
 
-	
-
-*  用户输入  / 表单
-	
-	* 用户输入
-		
-		```	
-		1:<input (input/keyup)="inputC($event)">
-		
-		2:<input #inpV (input/keyup)="input(inpV.value)">
-		
-		```
-	* 表单
-	
-		模板驱动表单   (用户的输入会时时绑定到数据中)
-		
-		表单里面所有输入控件必须有name属性
-		
-		```
-			1: 导入 import { FormsModule }   from '@angular/forms';
-			2: 加入@NgModule imports数组
-			
-			<form (ngSubmit)="subFrom()" #thisF = "ngForm">
-				<input type='text' name="input名称必须的" [(ngModel)]="" #nameI ="ngModel" requird minLength='' maxLength="">
-				<div *ngif="!name.valid">
-					
-				</div>
-				.....
-				<button type='submit' [disable]="!thisF.form.valid">提交</button>
-			</form>
-			
-			css class
-				.ng-untouched{未点击}
-				.ng-touched{点击}
-				.ng-dirty{值改变}
-				.ng-invalid{无效}
-				.ng-valid{无效}
-				exam：
-					  /**输入有效 */
-					  .ng-valid[required], .ng-valid.required {
-					    border-left: 5px solid green;
-					  }
-					  /**输入无效 */
-					  .ng-invalid:not(form){
-					    border-left:5px solid #a94442;
-	  				 }
-			#thisF 
-				变量指的是所在的DocumentObject
-				
-			#thisF="ngForm" / #nameI="ngModel"   
-				变量指的是经过aj包装后的DocumentObject
-			验证:
-				thisF.form.valid
-				name.errors.required/minlength/maxlength
-				name.valid
-		```
-	数据驱动 动态表单  （没有数据双向绑定,在用户提交时进行绑定）
-	
-		```
-			import { ReactiveFormsModule }   from '@angular/forms';
-			@ngModule imports: [... ReactiveFormsModule ],
-			
-			import { FormControl, FormBuilder:表单构造,FormGroup, Validators：验证s} from '@angular/forms';
-
-			是根据数据动态生成表单
-				formGroup          把HTML 和组件对象绑定
-				formControlName    把HTML 和formGroup某个控件绑定
-				只是提供对Form操作的方便
-				
-			
-				1:根据数据创建FromGroup
-					A:
-						let group:any={
-						//子控件
-							keyID1:new FormControl(value,Validators.required)
-							keyID2:new FormControl(value2,[Validators.required,Validators.minLength(4),API,自定义验证函数,AAAAA(reg)])
-							....
-						}
-						let myF = new FromGroup(group);
-					B:
-						注入FormBuilder
-						this.fb.group({
-							keyID1:[value,验证函数|[验证s]],
-							keyID2:[value,验证函数|[验证s]],
-							....
-						})
-					
-				2:绑定form和子控件
-					<form [formGroup]="myF">
-						根据数据创建form子控件
-							<input [id]="" [name]='' [formControlName]=keyID/>
-					</form>
-					
-				3:注意 表单的渲染 必须在formGroup对象创建之后  
-				4:验证
-					在创建FormControl 要指定验证函数Validators.required。。。。
-					this.form.controls[KEYID].valid
-					this.form.valid
-					this.form.controls[ID].errors   错误消息
-		```
-自定义验证:
-		
-		```
-		    自定义验证函数: 全局
-				import { AbstractControl, ValidatorFn, Validators } from '@angular/forms';
-				export function AAAAA(nameRe: RegExp):ValidatorFn {
-					//返回验证函数 
-			  		return (control: AbstractControl): {[key: string]: any} => {
-			   			retun 有效:null,输入无效：{"msg":"错误消息"}
-			   			
-			  		};
-				}
-			自定义验证指令：
-				import { Directive, Input, OnChanges, SimpleChanges } from
-				'@angular/core';
-				
-				import { AbstractControl, NG_VALIDATORS, Validator,
-				ValidatorFn, Validators } from '@angular/forms';
-				
-				@Directive({
-				   selector: '[forbiddenName]',
-				   providers: [{provide: NG_VALIDATORS, useExisting:
-				   MYDirective, multi: true}]
-				   	扩展系统验证框架 NG_VALIDATORS
-				})
-				
-				export class MYDirective implements Validator, OnChanges {
-					@Input() forbiddenName: string;  //[forbiddenName]=xxx
-					ngOnChanges(changes: SimpleChanges): void {
-					
-					}
-					validate(control: AbstractControl): {[key: string]: any}
-					{
-						return 返回验证函数
-					}
-				}
-				
-				<input  [forbiddenName]="bb">
-		
-		```
-
-
 * HTTP  JsonP  ------ > HttpClientModule
 	
 	```	
@@ -1095,6 +953,42 @@ _
 	你可以把一个单独的模块 比如说某一功能设置为特性模块 然后在root中包含它
 	
 	```
+
+* 单例服务
+	* 在根模块注册的服务全局仅仅一个实例
+	* 该服务包含在 AppModule 或某个只会被 AppModule 导入的模块中。
+	* forRoot
+			模块同时提供服务提供商和可申明地对象(组件|服务。。。),在子注入器会加载，然后生成多个该服务提供商。
+			如果你仅仅想在Root提供一个，那么子注入器的服务会屏蔽Root上的服务
+	
+		```
+		static forRoot(config: UserServiceConfig): ModuleWithProviders {
+		  return {
+		    ngModule: CoreModule,
+		    providers: [
+		      {provide: UserServiceConfig, useValue: config }
+		    ]
+		  };
+		}
+		
+		import { CoreModule } from './core/core.module';
+		/* . . . */
+		@NgModule({
+		  imports: [
+		    BrowserModule,
+		    CoreModule.forRoot({userName: 'Miss Marple'}),
+		})
+		```
+	* 防止重复导入某个模块
+		
+		```
+		constructor (@Optional() @SkipSelf() parentModule: CoreModule) {
+		  if (parentModule) {
+		    throw new Error(
+		      'CoreModule is already loaded. Import it in the AppModule only');
+		  }
+		}
+		```
 
 
 * 安全
